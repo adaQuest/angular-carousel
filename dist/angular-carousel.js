@@ -1,6 +1,6 @@
 /**
  * Angular Carousel - Mobile friendly touch carousel for AngularJS
- * @version v0.3.13 - 2015-08-05
+ * @version v0.3.13 - 2015-08-07
  * @link http://revolunet.github.com/angular-carousel
  * @author Julien Bouquillon <julien@revolunet.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -619,11 +619,11 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
                             //  console.log('swipeEnd', 'scope.carouselIndex', scope.carouselIndex);
                             // Prevent clicks on buttons inside slider to trigger "swipeEnd" event on touchend/mouseup
                             // console.log(iAttributes.rnCarouselOnInfiniteScroll);
+							pressed = false;
                             if (event && !swipeMoved) {
                                 return;
                             }
                             unbindMouseUpEvent();
-                            pressed = false;
                             swipeMoved = false;
                             destination = startX - coords.x;
                             if (destination===0) {

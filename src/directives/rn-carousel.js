@@ -515,11 +515,11 @@
                             //  console.log('swipeEnd', 'scope.carouselIndex', scope.carouselIndex);
                             // Prevent clicks on buttons inside slider to trigger "swipeEnd" event on touchend/mouseup
                             // console.log(iAttributes.rnCarouselOnInfiniteScroll);
+							pressed = false;
                             if (event && !swipeMoved) {
                                 return;
                             }
                             unbindMouseUpEvent();
-                            pressed = false;
                             swipeMoved = false;
                             destination = startX - coords.x;
                             if (destination===0) {
