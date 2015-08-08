@@ -1,6 +1,6 @@
 /**
  * Angular Carousel - Mobile friendly touch carousel for AngularJS
- * @version v0.3.13 - 2015-08-07
+ * @version v0.3.13 - 2015-08-08
  * @link http://revolunet.github.com/angular-carousel
  * @author Julien Bouquillon <julien@revolunet.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -377,7 +377,25 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
                             }
                             goToSlide(index, slideOptions);
                         };
+						
+						scope.carouselControlsVisibility = false;
 
+						function evaluateCarouselControlsVisibility($mouseEvent){
+							var elm = iElement.parent()[0];
+							var distance = elm.clientWidth / 4;
+							var x = $mouseEvent.clientX - elm.getBoundingClientRect().left - elm.clientLeft;
+							var visibility = false;
+							if (x < distance ||
+								x > elm.clientWidth - distance) {
+								visibility = true;
+							}
+
+							if (scope.carouselControlsVisibility !== visibility) {
+								scope.carouselControlsVisibility = visibility;
+								scope.$digest();
+							}
+						}
+						
                         function goToSlide(index, slideOptions) {
                             //console.log('goToSlide', arguments);
                             // move a to the given slide index
@@ -466,6 +484,7 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
                         function swipeMove(coords, event) {
                             //console.log('swipeMove', coords, event);
                             var x, delta;
+							
 							if (pressed) {
                                 bindMouseUpEvent();
 								x = coords.x;
@@ -496,18 +515,20 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
                             var nextSlideIndexCompareValue = isRepeatBased ? repeatCollection.replace('::', '') + '.length - 1' : currentSlides.length - 1;
                             var tpl1 =
                                 '<div class="rn-carousel-control-button-bar previous" ng-if="carouselIndex > 0 || ' + canloop + '">' +
-                                '   <div ng-click="prevSlide()" class="rn-carousel-control-circle-button" type="button" disabled="">' +
-                                '       <svg viewBox="0 0 100 100"><path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z" class="arrow"></path></svg>' +
+                                '   <div ng-click="prevSlide()" ng-if="carouselControlsVisibility" class="rn-carousel-control-circle-button" type="button" disabled="">' +
+                                '       <svg viewBox="0 0 68 100"><path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z" class="arrow"></path></svg>' +
                                 '   </div>' +
                                 '</div>';
                             var tpl2 =
                                 '<div class="rn-carousel-control-button-bar next" ng-if="carouselIndex < ' + nextSlideIndexCompareValue + ' || ' + canloop + '">' +
-                                '   <div ng-click="nextSlide()" class="rn-carousel-control-circle-button" type="button" disabled="">' +
-                                '       <svg viewBox="0 0 100 100"><path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z" class="arrow" transform="translate(100, 100) rotate(180)"></path></svg>' +
+                                '   <div ng-click="nextSlide()" ng-if="carouselControlsVisibility" class="rn-carousel-control-circle-button" type="button" disabled="">' +
+                                '       <svg viewBox="0 0 68 100"><path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z" class="arrow" transform="translate(68, 100) rotate(180)"></path></svg>' +
                                 '   </div>' +
                                 '</div>';
                             iElement.parent().append($compile(angular.element(tpl1))(scope));
                             iElement.parent().append($compile(angular.element(tpl2))(scope));
+							iElement.on('mousemove', evaluateCarouselControlsVisibility);
+							//iElement.on('mouseleave', function(){scope.carouselControlsVisibility = false; scope.$digest();});
                         }
 
                         if (iAttributes.rnCarouselAutoSlide!==undefined) {

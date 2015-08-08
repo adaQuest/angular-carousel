@@ -89,21 +89,28 @@ ul.rn-carousel-tab-indicator li:hover {
   color: #11B1C4; }
 
 .rn-carousel-control-circle-button {
-  width: 30px;
+  width: 20px;
   height: 30px;
   border: none;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 0%;
   cursor: pointer;
   position: fixed;
   top: 50%;
   display: inline-block; }
 
-.rn-carousel-control-circle-button.previous {
-  left: 0px; }
+.rn-carousel-control-button-bar {
+  cursor: pointer;
+  display: inline-block;
+  height: 0%;
+  position: absolute;
+  top: 0px;
+  width: 20px; }
 
-.rn-carousel-control-circle-button.next {
-  right: 0px; }
+.rn-carousel-control-button-bar.previous {
+  left: -10px; }
+
+.rn-carousel-control-button-bar.next {
+  right: -10px; }
 
 .rn-carousel-control-button-bar {
   cursor: pointer;
