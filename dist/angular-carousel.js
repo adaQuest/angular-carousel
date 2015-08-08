@@ -391,8 +391,14 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
 							}
 
 							if (scope.carouselControlsVisibility !== visibility) {
-								scope.carouselControlsVisibility = visibility;
-								scope.$digest();
+								/*
+								scope.$apply(function(){
+									scope.carouselControlsVisibility = visibility;
+								});
+								*/
+								$timeout(function() {
+									scope.carouselControlsVisibility = visibility;
+								});
 							}
 						}
 						
@@ -528,7 +534,7 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
                             iElement.parent().append($compile(angular.element(tpl1))(scope));
                             iElement.parent().append($compile(angular.element(tpl2))(scope));
 							iElement.on('mousemove', evaluateCarouselControlsVisibility);
-							//iElement.on('mouseleave', function(){scope.carouselControlsVisibility = false; scope.$digest();});
+							//iElement.on('mouseleave', function(){scope.$apply(function(){scope.carouselControlsVisibility = false;});
                         }
 
                         if (iAttributes.rnCarouselAutoSlide!==undefined) {
