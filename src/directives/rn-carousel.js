@@ -260,6 +260,7 @@
                             var index = scope.carouselIndex + 1;
                             if (index > currentSlides.length - 1) {
                                 index = 0;
+								return;
                             }
                             if (!locked) {
                                 goToSlide(index, slideOptions);
@@ -270,6 +271,7 @@
                             var index = scope.carouselIndex - 1;
                             if (index < 0) {
                                 index = currentSlides.length - 1;
+								return;
                             }
                             goToSlide(index, slideOptions);
                         };
@@ -411,18 +413,20 @@
                             });
                         }
 
-                        if (iAttributes.rnCarouselControls!==undefined) {
+                        if (iAttributes.rnCarouselControls === 'yes' || iAttributes.rnCarouselControls === 'true') {
                             // dont use a directive for this
                             var canloop = ((isRepeatBased ? scope[repeatCollection.replace('::', '')].length : currentSlides.length) > 1) ? angular.isDefined(tAttributes['rnCarouselControlsAllowLoop']) : false;
                             var nextSlideIndexCompareValue = isRepeatBased ? repeatCollection.replace('::', '') + '.length - 1' : currentSlides.length - 1;
-                            var tpl1 =
-                                '<div class="rn-carousel-control-button-bar previous" ng-if="carouselIndex > 0 || ' + canloop + '">' +
+                            var exp1 = '(carouselIndex > 0 || ' + canloop + ')';
+							var exp2 = '(carouselIndex < ' + nextSlideIndexCompareValue + ' || ' + canloop + ')';
+							var tpl1 =
+                                '<div class="rn-carousel-control-button-bar previous" ng-style=\'{fill: (' + exp1 + ' ? "rgb(0,0,0)" : "rgb(200,200,200)")}\'>' +
                                 '   <div ng-click="prevSlide()" ng-if="carouselControlsVisibility" class="rn-carousel-control-circle-button" type="button" disabled="">' +
                                 '       <svg viewBox="0 0 68 100"><path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z" class="arrow"></path></svg>' +
                                 '   </div>' +
                                 '</div>';
                             var tpl2 =
-                                '<div class="rn-carousel-control-button-bar next" ng-if="carouselIndex < ' + nextSlideIndexCompareValue + ' || ' + canloop + '">' +
+                                '<div class="rn-carousel-control-button-bar next"     ng-style=\'{fill: (' + exp2 + ' ? "rgb(0,0,0)" : "rgb(200,200,200)")}\'>' +
                                 '   <div ng-click="nextSlide()" ng-if="carouselControlsVisibility" class="rn-carousel-control-circle-button" type="button" disabled="">' +
                                 '       <svg viewBox="0 0 68 100"><path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z" class="arrow" transform="translate(68, 100) rotate(180)"></path></svg>' +
                                 '   </div>' +

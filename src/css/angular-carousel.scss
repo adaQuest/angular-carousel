@@ -126,12 +126,6 @@ ul.rn-carousel-tab-indicator li:hover{
   position: absolute;
   top: 0px;
   width: 20px; }
-
-.rn-carousel-control-button-bar.previous {
-  left: -10px; }
-
-.rn-carousel-control-button-bar.next {
-  right: -10px; }
   
 .rn-carousel-control-button-bar{
     cursor:pointer;
@@ -147,9 +141,9 @@ ul.rn-carousel-tab-indicator li:hover{
 }
 
 .rn-carousel-control-button-bar.previous{
-    left:0px;
+    left:-20px;
 }
 
 .rn-carousel-control-button-bar.next{
-    right:0px;
+    right:-20px;
 }

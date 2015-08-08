@@ -106,12 +106,6 @@ ul.rn-carousel-tab-indicator li:hover {
   top: 0px;
   width: 20px; }
 
-.rn-carousel-control-button-bar.previous {
-  left: -10px; }
-
-.rn-carousel-control-button-bar.next {
-  right: -10px; }
-
 .rn-carousel-control-button-bar {
   cursor: pointer;
   display: inline-block;
@@ -124,9 +118,9 @@ ul.rn-carousel-tab-indicator li:hover {
   background-color: transparent; }
 
 .rn-carousel-control-button-bar.previous {
-  left: 0px; }
+  left: -20px; }
 
 .rn-carousel-control-button-bar.next {
-  right: 0px; }
+  right: -20px; }
 
 /*# sourceMappingURL=angular-carousel.css.map */
