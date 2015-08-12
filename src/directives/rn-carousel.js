@@ -222,7 +222,8 @@
                             intialState = true,
                             animating = false,
                             mouseUpBound = false,
-                            locked = false;
+                            locked = false,
+							lastSwipeEndTime = 0;
 
                         //rn-swipe-disabled =true will only disable swipe events
                         if(iAttributes.rnSwipeDisabled !== "true") {
@@ -234,6 +235,16 @@
                                     swipeEnd({}, event);
                                 }
                             });
+							
+							// prevent ghost click
+							['mouseup', 'touchend', 'click'].forEach(function(eventName){
+								iElement[0].addEventListener(eventName, function(event){
+									if (Math.abs(lastSwipeEndTime - Date.now()) < 100){
+										event.stopPropagation();
+										lastSwipeEndTime = 0;
+									}
+								}, true);
+							});
                         }
 
                         function getSlidesDOM() {
@@ -550,6 +561,7 @@
                             if (event && !swipeMoved) {
                                 return;
                             }
+							lastSwipeEndTime = Date.now();
                             unbindMouseUpEvent();
                             swipeMoved = false;
                             destination = startX - coords.x;

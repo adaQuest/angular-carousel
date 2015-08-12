@@ -1,6 +1,6 @@
 /**
  * Angular Carousel - Mobile friendly touch carousel for AngularJS
- * @version v0.3.13 - 2015-08-08
+ * @version v0.3.13 - 2015-08-12
  * @link http://revolunet.github.com/angular-carousel
  * @author Julien Bouquillon <julien@revolunet.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -326,7 +326,8 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
                             intialState = true,
                             animating = false,
                             mouseUpBound = false,
-                            locked = false;
+                            locked = false,
+							lastSwipeEndTime = 0;
 
                         //rn-swipe-disabled =true will only disable swipe events
                         if(iAttributes.rnSwipeDisabled !== "true") {
@@ -338,6 +339,16 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
                                     swipeEnd({}, event);
                                 }
                             });
+							
+							// prevent ghost click
+							['mouseup', 'touchend', 'click'].forEach(function(eventName){
+								iElement[0].addEventListener(eventName, function(event){
+									if (Math.abs(lastSwipeEndTime - Date.now()) < 100){
+										event.stopPropagation();
+										lastSwipeEndTime = 0;
+									}
+								}, true);
+							});
                         }
 
                         function getSlidesDOM() {
@@ -654,6 +665,7 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
                             if (event && !swipeMoved) {
                                 return;
                             }
+							lastSwipeEndTime = Date.now();
                             unbindMouseUpEvent();
                             swipeMoved = false;
                             destination = startX - coords.x;
