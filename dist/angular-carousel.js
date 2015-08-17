@@ -1,6 +1,6 @@
 /**
  * Angular Carousel - Mobile friendly touch carousel for AngularJS
- * @version v0.3.13 - 2015-08-12
+ * @version v0.3.13 - 2015-08-15
  * @link http://revolunet.github.com/angular-carousel
  * @author Julien Bouquillon <julien@revolunet.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -395,7 +395,7 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
 
 						function evaluateCarouselControlsVisibility($mouseEvent){
 							var elm = iElement.parent()[0];
-							var distance = elm.clientWidth / 4;
+							var distance = elm.clientWidth / 3;
 							var x = $mouseEvent.clientX - elm.getBoundingClientRect().left - elm.clientLeft;
 							var visibility = false;
 							if (x < distance ||
@@ -403,16 +403,18 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
 								visibility = true;
 							}
 
+							console.log('evalulate visiblity', scope.carouselControlsVisibility, visibility, $mouseEvent.clientX, $mouseEvent.clientY, $mouseEvent);
 							if (scope.carouselControlsVisibility !== visibility) {
 								/*
 								scope.$apply(function(){
 									scope.carouselControlsVisibility = visibility;
 								});
 								*/
-								$timeout(function() {
+								$timeout(function(){
 									scope.carouselControlsVisibility = visibility;
 								});
 							}
+							
 						}
 						
                         function goToSlide(index, slideOptions) {
@@ -548,7 +550,7 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
                                 '</div>';
                             iElement.parent().append($compile(angular.element(tpl1))(scope));
                             iElement.parent().append($compile(angular.element(tpl2))(scope));
-							iElement.on('mousemove', evaluateCarouselControlsVisibility);
+							iElement.parent().on('mousemove', evaluateCarouselControlsVisibility);
 							//iElement.on('mouseleave', function(){scope.$apply(function(){scope.carouselControlsVisibility = false;});
                         }
 
