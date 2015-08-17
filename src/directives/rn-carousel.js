@@ -299,7 +299,7 @@
 								visibility = true;
 							}
 
-							console.log('evalulate visiblity', scope.carouselControlsVisibility, visibility, $mouseEvent.clientX, $mouseEvent.clientY, $mouseEvent);
+							//console.log('evalulate visiblity', scope.carouselControlsVisibility, visibility, $mouseEvent.clientX, $mouseEvent.clientY, $mouseEvent);
 							if (scope.carouselControlsVisibility !== visibility) {
 								/*
 								scope.$apply(function(){
@@ -351,6 +351,12 @@
                                         $timeout(function () {
                                           locked = false;
                                         }, 0, false);
+										
+										//console.log('animation-end, force redraw');
+										iElement.parent()[0].style.opacity = 0.99;
+										$timeout(function(){
+											iElement.parent()[0].style.opacity = "";
+										}, 100, false);
                                     });
                                 }
                             });
