@@ -269,21 +269,25 @@
 
                         scope.nextSlide = function(slideOptions) {
                             var index = scope.carouselIndex + 1;
+							/*
                             if (index > currentSlides.length - 1) {
                                 index = 0;
 								return;
                             }
+							*/
                             if (!locked) {
                                 goToSlide(index, slideOptions);
                             }
                         };
 
                         scope.prevSlide = function(slideOptions) {
-                            var index = scope.carouselIndex - 1;
+							var index = scope.carouselIndex - 1;
+							/*
                             if (index < 0) {
                                 index = currentSlides.length - 1;
 								return;
                             }
+							*/
                             goToSlide(index, slideOptions);
                         };
 						
@@ -313,6 +317,23 @@
 							
 						}
 						
+						function goToSlideWithNoAnimation(index) {
+							//make sure the index is within [0, currentSlides.length-1]
+							if (currentSlides.length === 0) {
+								index = 0;
+							}
+							else {
+								index = index % currentSlides.length;
+								if (index < -0.5) {
+									index = index + currentSlides.length;
+								}
+							}
+							
+							offset = index * -100;
+							scope.carouselIndex = index;
+							updateBufferIndex();
+						}
+						
                         function goToSlide(index, slideOptions) {
                             //console.log('goToSlide', arguments);
                             // move a to the given slide index
@@ -323,9 +344,7 @@
                             slideOptions = slideOptions || {};
                             if (slideOptions.animate === false || options.transitionType === 'none') {
                                 locked = false;
-                                offset = index * -100;
-                                scope.carouselIndex = index;
-                                updateBufferIndex();
+                                goToSlideWithNoAnimation(index);
                                 return;
                             }
 
@@ -345,10 +364,8 @@
                                 },
                                 finish: function() {
                                     scope.$apply(function() {
-                                        scope.carouselIndex = index;
-                                        offset = index * -100;
-                                        updateBufferIndex();
-                                        $timeout(function () {
+                                        goToSlideWithNoAnimation(index);
+										$timeout(function () {
                                           locked = false;
                                         }, 0, false);
 										
@@ -436,8 +453,8 @@
                             // dont use a directive for this
                             var canloop = ((isRepeatBased ? scope[repeatCollection.replace('::', '')].length : currentSlides.length) > 1) ? angular.isDefined(tAttributes['rnCarouselControlsAllowLoop']) : false;
                             var nextSlideIndexCompareValue = isRepeatBased ? repeatCollection.replace('::', '') + '.length - 1' : currentSlides.length - 1;
-                            var exp1 = '(carouselIndex > 0 || ' + canloop + ')';
-							var exp2 = '(carouselIndex < ' + nextSlideIndexCompareValue + ' || ' + canloop + ')';
+                            var exp1 = 'true';// '(carouselIndex > 0 || ' + canloop + ')';
+							var exp2 = 'true';//'(carouselIndex < ' + nextSlideIndexCompareValue + ' || ' + canloop + ')';
 							var tpl1 =
                                 '<div class="rn-carousel-control-button-bar previous" ng-style=\'{fill: (' + exp1 + ' ? "rgb(0,0,0)" : "rgb(200,200,200)")}\'>' +
                                 '   <div ng-click="prevSlide()" ng-if="carouselControlsVisibility" class="rn-carousel-control-circle-button" type="button" disabled="">' +
@@ -586,12 +603,15 @@
                                     slidesMove = -Math[absMove >= 0 ? 'ceil' : 'floor'](absMove / elWidth),
                                     shouldMove = Math.abs(absMove) > minMove;
 
+								//we allow the swipe to be loopable, therefore, checking overflow or underflow is not needed anymore
+								/*
                                 if (currentSlides && (slidesMove + scope.carouselIndex) >= currentSlides.length) {
                                     slidesMove = currentSlides.length - 1 - scope.carouselIndex;
                                 }
                                 if ((slidesMove + scope.carouselIndex) < 0) {
                                     slidesMove = -scope.carouselIndex;
                                 }
+								*/
                                 var moveOffset = shouldMove ? slidesMove : 0;
 
                                 destination = (scope.carouselIndex + moveOffset);
