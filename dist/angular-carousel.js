@@ -368,7 +368,7 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
                             // manually apply transformation to carousel childrens
                             // todo : optim : apply only to visible items
                             var x = scope.carouselBufferIndex * 100 + offset;
-							iElement[0].style.transform = 'translate3d(' + x + '%, 0, 0)';
+							iElement[0].style.transform = 'translate(' + x + '%, 0)';
                         }
 
                         scope.nextSlide = function(slideOptions) {
