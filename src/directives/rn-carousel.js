@@ -264,7 +264,7 @@
                             // manually apply transformation to carousel childrens
                             // todo : optim : apply only to visible items
                             var x = scope.carouselBufferIndex * 100 + offset;
-							iElement[0].style.cssText = createStyleString(computeCarouselSlideStyle(x, options.transitionType));
+							iElement[0].style.transform = 'translate3d(' + x + '%, 0, 0)';
                         }
 
                         scope.nextSlide = function(slideOptions) {

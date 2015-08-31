@@ -1,6 +1,6 @@
 /**
  * Angular Carousel - Mobile friendly touch carousel for AngularJS
- * @version v0.3.13 - 2015-08-18
+ * @version v0.3.13 - 2015-08-31
  * @link http://revolunet.github.com/angular-carousel
  * @author Julien Bouquillon <julien@revolunet.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -368,7 +368,7 @@ angular.module('angular-carousel').run(['$templateCache', function ($templateCac
                             // manually apply transformation to carousel childrens
                             // todo : optim : apply only to visible items
                             var x = scope.carouselBufferIndex * 100 + offset;
-							iElement[0].style.cssText = createStyleString(computeCarouselSlideStyle(x, options.transitionType));
+							iElement[0].style.transform = 'translate3d(' + x + '%, 0, 0)';
                         }
 
                         scope.nextSlide = function(slideOptions) {
