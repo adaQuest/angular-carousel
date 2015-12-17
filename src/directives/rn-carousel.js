@@ -160,7 +160,7 @@
                         isBuffered = false,
                         repeatItem,
                         repeatCollection;
-
+						
                     // try to find an ngRepeat expression
                     // at this point, the attributes are not yet normalized so we need to try various syntax
                     ['ng-repeat', 'data-ng-repeat', 'ng:repeat', 'x-ng-repeat'].every(function(attr) {
@@ -246,6 +246,18 @@
 								}, true);
 							});
                         }
+						
+						// there is a bug in rendering engine of Chrome, which it will create some artifact when
+						// users resize internet browser
+						// we install an event here to force Chrome redraw the element
+						function windowResizeEventHandler(){
+							jQuery(iElement[0]).hide().show(0);
+						};
+						jQuery(window).on('resize', windowResizeEventHandler);
+						scope.$on('$destroy', function(){
+							jQuery(window).off('resize', windowResizeEventHandler);
+						});
+
 
                         function getSlidesDOM() {
                             return iElement[0].querySelectorAll('ul[rn-carousel] > li');
