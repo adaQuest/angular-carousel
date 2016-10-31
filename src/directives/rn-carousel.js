@@ -461,10 +461,29 @@
                             });
                         }
 
+						if (isRepeatBased) {
+                            // use rn-carousel-deep-watch to fight the Angular $watchCollection weakness : https://github.com/angular/angular.js/issues/2621
+                            // optional because it have some performance impacts (deep watch)
+                            var deepWatch = (iAttributes.rnCarouselDeepWatch!==undefined);
+
+                            scope.$parent[deepWatch?'$watch':'$watchCollection'](repeatCollection, function(newValue, oldValue) {
+                                //console.log('repeatCollection', currentSlides);
+                                currentSlides = newValue;
+                                // if deepWatch ON ,manually compare objects to guess the new position
+                                if (deepWatch && angular.isArray(newValue)) {
+                                    var activeElement = oldValue[scope.carouselIndex];
+                                    var newIndex = getItemIndex(newValue, activeElement, scope.carouselIndex);
+                                    goToSlide(newIndex, {animate: false});
+                                } else {
+                                    goToSlide(scope.carouselIndex, {animate: false});
+                                }
+                            }, true);
+                        }
+
                         if (iAttributes.rnCarouselControls === 'yes' || iAttributes.rnCarouselControls === 'true') {
                             // dont use a directive for this
-                            var canloop = ((isRepeatBased ? scope[repeatCollection.replace('::', '')].length : currentSlides.length) > 1) ? angular.isDefined(tAttributes['rnCarouselControlsAllowLoop']) : false;
-                            var nextSlideIndexCompareValue = isRepeatBased ? repeatCollection.replace('::', '') + '.length - 1' : currentSlides.length - 1;
+                            //var canloop = ((isRepeatBased ? scope[repeatCollection.replace('::', '')].length : currentSlides.length) > 1) ? angular.isDefined(tAttributes['rnCarouselControlsAllowLoop']) : false;
+                            //var nextSlideIndexCompareValue = isRepeatBased ? repeatCollection.replace('::', '') + '.length - 1' : currentSlides.length - 1;
                             var exp1 = 'true';// '(carouselIndex > 0 || ' + canloop + ')';
 							var exp2 = 'true';//'(carouselIndex < ' + nextSlideIndexCompareValue + ' || ' + canloop + ')';
 							var tpl1 =
@@ -570,25 +589,6 @@
 								return swipingZonePredicate(scope)(e);
 							}
 						}
-
-                        if (isRepeatBased) {
-                            // use rn-carousel-deep-watch to fight the Angular $watchCollection weakness : https://github.com/angular/angular.js/issues/2621
-                            // optional because it have some performance impacts (deep watch)
-                            var deepWatch = (iAttributes.rnCarouselDeepWatch!==undefined);
-
-                            scope[deepWatch?'$watch':'$watchCollection'](repeatCollection, function(newValue, oldValue) {
-                                //console.log('repeatCollection', currentSlides);
-                                currentSlides = newValue;
-                                // if deepWatch ON ,manually compare objects to guess the new position
-                                if (deepWatch && angular.isArray(newValue)) {
-                                    var activeElement = oldValue[scope.carouselIndex];
-                                    var newIndex = getItemIndex(newValue, activeElement, scope.carouselIndex);
-                                    goToSlide(newIndex, {animate: false});
-                                } else {
-                                    goToSlide(scope.carouselIndex, {animate: false});
-                                }
-                            }, true);
-                        }
 
                         function swipeEnd(coords, event, forceAnimation) {
                             //  console.log('swipeEnd', 'scope.carouselIndex', scope.carouselIndex);
